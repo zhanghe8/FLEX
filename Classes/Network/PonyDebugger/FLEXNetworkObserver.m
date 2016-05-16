@@ -420,6 +420,9 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
                 // with nil completion block.
                 if ([FLEXNetworkObserver isEnabled] && completion) {
                     NSString *requestID = [self nextRequestID];
+                    if ([argument isKindOfClass:[NSURLRequest class]]) {
+                        [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:argument redirectResponse:nil];
+                    }
                     NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
                     NSURLSessionAsyncCompletion completionWrapper = [self asyncCompletionWrapperForRequestID:requestID mechanism:mechanism completion:completion];
                     task = ((id(*)(id, SEL, id, id))objc_msgSend)(slf, swizzledSelector, argument, completionWrapper);
